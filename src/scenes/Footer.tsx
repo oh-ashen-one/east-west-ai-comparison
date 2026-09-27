@@ -143,7 +143,7 @@ export const Footer: React.FC = () => {
 					</div>
 				</div>
 
-				<Rule progress={inAt(24, 40)} />
+				<Rule progress={inAt(14, 30)} />
 
 				<div
 					style={{
@@ -151,7 +151,7 @@ export const Footer: React.FC = () => {
 						gridTemplateColumns: narrow ? '1fr' : '1.35fr 1fr',
 						rowGap: narrow ? '2.2vh' : 0,
 						gap: narrow ? '2.2vh' : '0 4vw',
-						opacity: inAt(34, 40),
+						opacity: inAt(22, 30),
 					}}
 				>
 					{/* Sources */}
@@ -169,7 +169,7 @@ export const Footer: React.FC = () => {
 							{SOURCES.map((s, i) => {
 								const p = interpolate(
 									frame,
-									[start + 44 + i * 5, start + 44 + i * 5 + 26],
+									[start + 28 + i * 2.5, start + 28 + i * 2.5 + 20],
 									[0, 1],
 									{
 										extrapolateLeft: 'clamp',
@@ -227,7 +227,7 @@ export const Footer: React.FC = () => {
 									display: 'grid',
 									gridTemplateColumns: '14px 1fr',
 									gap: 10,
-									opacity: inAt(60, 30),
+									opacity: inAt(40, 24),
 								}}
 							>
 								<span
@@ -258,7 +258,7 @@ export const Footer: React.FC = () => {
 								marginTop: '0.8vh',
 								paddingTop: '1.2vh',
 								borderTop: `1px solid ${C.ruleSoft}`,
-								opacity: inAt(78, 30),
+								opacity: inAt(54, 24),
 							}}
 						>
 							<p

@@ -167,7 +167,7 @@ const TravelHint: React.FC<{travelled: number}> = ({travelled}) => {
 	const bob = Math.sin(frame / 22) * 4;
 	const fade = interpolate(
 		frame,
-		[T.axes.in + 120, T.axes.in + 260],
+		[T.axes.in + 16, T.axes.in + 84],
 		[0, 1],
 		{
 			extrapolateLeft: 'clamp',

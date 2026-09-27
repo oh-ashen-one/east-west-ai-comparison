@@ -149,7 +149,7 @@ export const EastWest: React.FC = () => {
 					rotate: '-90deg',
 					translate: '0 -50%',
 					transformOrigin: 'left center',
-					opacity: interpolate(frame, [70, 130, 2300, 2350], [0, 1, 1, 0], {
+					opacity: interpolate(frame, [16, 66, 2300, 2350], [0, 1, 1, 0], {
 						extrapolateLeft: 'clamp',
 						extrapolateRight: 'clamp',
 					}),

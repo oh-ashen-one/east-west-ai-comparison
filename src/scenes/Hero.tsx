@@ -6,22 +6,19 @@ import {T} from '../data';
 /**
  * Section 01 — Hero.
  *
- * Typography-led, two colour families meeting at a centre seam. Everything
- * arrives on load, then the whole lockup pulls back as the camera and hands
- * the page over to the contenders grid with no visible seam.
+ * IMPORTANT: this composition is scroll-driven, not playing. `useCurrentFrame()`
+ * inside a `<Player>` with no playback is frozen at 0 and only advances when the
+ * reader scrolls. So every element here is fully composed at frame 0 — the
+ * resting state of the page must be the finished hero, not an empty stage.
+ *
+ * The one-time entrance is therefore a CSS animation (`data-rise`, defined in
+ * index.html) that runs once on mount. Scroll-driven motion — the camera
+ * pull-back, the seam, the ambient breathing — stays on the frame axis.
  */
 export const Hero: React.FC = () => {
 	const frame = useCurrentFrame();
 
-	// Load-in: 0 → 1 over roughly the first second and a half.
-	const load = (delay: number, span = 30) =>
-		interpolate(frame, [delay, delay + span], [0, 1], {
-			extrapolateLeft: 'clamp',
-			extrapolateRight: 'clamp',
-			easing: Easing.bezier(0.16, 1, 0.3, 1),
-		});
-
-	// Camera pull-back as the scroll begins.
+	// Camera pull-back as the scroll begins. Genuinely scroll-driven.
 	const pull = interpolate(
 		frame,
 		[T.hero.out - 150, T.hero.out + 60],
@@ -40,8 +37,8 @@ export const Hero: React.FC = () => {
 		easing: Easing.bezier(0.4, 0, 0.2, 1),
 	});
 
-	// The seam that splits the frame, opening outward as the hero lands.
-	const seamOpen = interpolate(frame, [6, 74], [0, 1], {
+	// The seam is already open at rest and widens slightly as you scroll away.
+	const seamOpen = interpolate(frame, [0, 40], [0.8, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 		easing: Easing.bezier(0.16, 1, 0.3, 1),
@@ -49,11 +46,6 @@ export const Hero: React.FC = () => {
 
 	// A slow breathing scale so the hero is never fully static.
 	const breathe = 1 + Math.sin(frame / 46) * 0.006;
-
-	const titleIn = load(14, 40);
-	const subIn = load(38, 34);
-	const metaIn = load(58, 30);
-	const cueIn = load(76, 26);
 
 	return (
 		<AbsoluteFill
@@ -101,24 +93,14 @@ export const Hero: React.FC = () => {
 					maxWidth: 1180,
 				}}
 			>
-				<div
-					style={{
-						opacity: metaIn,
-						translate: `0px ${interpolate(metaIn, [0, 1], [12, 0])}px`,
-					}}
-				>
+				<div data-rise style={{'--d': 40} as React.CSSProperties}>
 					<Eyebrow color={C.dim} size={10.5}>
 						An evidence-based comparison · 27 September 2026
 					</Eyebrow>
 				</div>
 
 				{/* The premise, in one line. */}
-				<div
-					style={{
-						opacity: titleIn,
-						translate: `0px ${interpolate(titleIn, [0, 1], [26, 0])}px`,
-					}}
-				>
+				<div data-rise style={{'--d': 130} as React.CSSProperties}>
 					<h1
 						style={{
 							margin: 0,
@@ -144,13 +126,8 @@ export const Hero: React.FC = () => {
 				</div>
 
 				<div
-					style={{
-						display: 'flex',
-						alignItems: 'center',
-						gap: 18,
-						opacity: subIn,
-						translate: `0px ${interpolate(subIn, [0, 1], [16, 0])}px`,
-					}}
+					data-rise
+					style={{display: 'flex', alignItems: 'center', gap: 18, '--d': 250} as React.CSSProperties}
 				>
 					<div style={{width: 64, height: 1, background: C.rule}} />
 					<div
@@ -170,68 +147,49 @@ export const Hero: React.FC = () => {
 
 				{/* The three-word thesis */}
 				<div
+					data-rise
 					style={{
 						display: 'flex',
 						gap: 34,
-						opacity: metaIn,
 						flexWrap: 'wrap',
 						justifyContent: 'center',
-					}}
+						'--d': 360,
+					} as React.CSSProperties}
 				>
 					{[
 						['Reasoning', 'where the West leads'],
 						['Openness', 'where the East leads'],
 						['Censorship', 'where neither wins'],
-					].map(([k, v], i) => {
-						const p = interpolate(
-							frame,
-							[62 + i * 7, 62 + i * 7 + 26],
-							[0, 1],
-							{
-								extrapolateLeft: 'clamp',
-								extrapolateRight: 'clamp',
-								easing: Easing.bezier(0.16, 1, 0.3, 1),
-							},
-						);
-						return (
-							<div
-								key={k}
+					].map(([k, v]) => (
+						<div
+							key={k}
+							style={{
+								display: 'flex',
+								flexDirection: 'column',
+								alignItems: 'center',
+								gap: 6,
+							}}
+						>
+							<span style={{...label(10), color: C.text}}>{k}</span>
+							<span
 								style={{
-									display: 'flex',
-									flexDirection: 'column',
-									alignItems: 'center',
-									gap: 6,
-									opacity: p,
-									translate: `0px ${interpolate(p, [0, 1], [10, 0])}px`,
+									fontFamily: FONT_BODY,
+									fontSize: 11.5,
+									fontWeight: 300,
+									color: C.faint,
+									letterSpacing: '0.02em',
 								}}
 							>
-								<span
-									style={{
-										...label(10),
-										color: C.text,
-									}}
-								>
-									{k}
-								</span>
-								<span
-									style={{
-										fontFamily: FONT_BODY,
-										fontSize: 11.5,
-										fontWeight: 300,
-										color: C.faint,
-										letterSpacing: '0.02em',
-									}}
-								>
-									{v}
-								</span>
-							</div>
-						);
-					})}
+								{v}
+							</span>
+						</div>
+					))}
 				</div>
 			</div>
 
-			{/* Scroll cue — a hairline that draws itself downward */}
+			{/* Scroll cue — a hairline that draws itself downward as you scroll */}
 			<div
+				data-rise
 				style={{
 					position: 'absolute',
 					bottom: '5.2%',
@@ -241,11 +199,12 @@ export const Hero: React.FC = () => {
 					alignItems: 'center',
 					gap: 12,
 					translate: '-50% 0px',
-					opacity: cueIn * interpolate(frame, [96, 130], [1, 0], {
+					'--d': 470,
+					opacity: interpolate(frame, [96, 150], [1, 0], {
 						extrapolateLeft: 'clamp',
 						extrapolateRight: 'clamp',
 					}),
-				}}
+				} as React.CSSProperties}
 			>
 				<Eyebrow size={9.5}>Scroll</Eyebrow>
 				<div
@@ -264,8 +223,8 @@ export const Hero: React.FC = () => {
 							background: C.text,
 							translate: `0px ${interpolate(
 								frame,
-								[80, 130],
-								['-100%', '100%'],
+								[0, 40],
+								['0%', '100%'],
 								{
 									extrapolateRight: 'clamp',
 									easing: Easing.bezier(0.4, 0, 0.2, 1),

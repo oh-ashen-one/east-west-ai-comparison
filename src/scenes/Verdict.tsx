@@ -15,20 +15,20 @@ export const Verdict: React.FC = () => {
 	const start = T.verdict.in;
 	const narrow = isNarrow(useTier());
 
-	const lead = interpolate(frame, [start - 14, start + 30], [0, 1], {
+	const lead = interpolate(frame, [start - 20, start + 14], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 		easing: Easing.bezier(0.16, 1, 0.3, 1),
 	});
 
-	const ruleIn = interpolate(frame, [start + 6, start + 70], [0, 1], {
+	const ruleIn = interpolate(frame, [start - 4, start + 40], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 		easing: Easing.bezier(0.16, 1, 0.3, 1),
 	});
 
 	// The two halves of the closing statement resolve from the centre out.
-	const split = interpolate(frame, [start + 10, start + 56], [0, 1], {
+	const split = interpolate(frame, [start + 4, start + 34], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 		easing: Easing.bezier(0.16, 1, 0.3, 1),
@@ -142,8 +142,8 @@ const DecisionRow: React.FC<{d: (typeof DECISIONS)[number]; i: number; start: nu
 	compact,
 }) => {
 	const frame = useCurrentFrame();
-	const at = start + i * 11;
-	const p = interpolate(frame, [at, at + 30], [0, 1], {
+	const at = start + i * 6;
+	const p = interpolate(frame, [at, at + 24], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 		easing: Easing.bezier(0.16, 1, 0.3, 1),
@@ -214,7 +214,7 @@ const Unsettled: React.FC<{start: number; compact?: boolean}> = ({start, compact
 				gridTemplateColumns: compact ? '1fr' : 'minmax(120px, 13%) 1fr',
 				gap: compact ? 10 : 26,
 				paddingTop: '1.4vh',
-				opacity: interpolate(frame, [start, start + 36], [0, 1], {
+				opacity: interpolate(frame, [start, start + 26], [0, 1], {
 					extrapolateLeft: 'clamp',
 					extrapolateRight: 'clamp',
 					easing: Easing.bezier(0.16, 1, 0.3, 1),
@@ -275,11 +275,11 @@ const DesktopVerdict: React.FC<{
 			}}
 		>
 			{DECISIONS.map((d, i) => (
-				<DecisionRow key={d.pick} d={d} i={i} start={start + 30} />
+				<DecisionRow key={d.pick} d={d} i={i} start={start + 20} />
 			))}
 		</div>
 
-		<Unsettled start={start + 120} />
+		<Unsettled start={start + 70} />
 	</div>
 );
 
@@ -337,7 +337,7 @@ const PhoneVerdict: React.FC<{start: number; ruleIn: number}> = ({
 						<Rule progress={ruleIn} />
 						<div style={{display: 'flex', flexDirection: 'column'}}>
 							{DECISIONS.slice(0, 3).map((d, i) => (
-								<DecisionRow key={d.pick} d={d} i={i} start={start + 18} compact />
+								<DecisionRow key={d.pick} d={d} i={i} start={start + 14} compact />
 							))}
 						</div>
 					</>,
@@ -353,10 +353,10 @@ const PhoneVerdict: React.FC<{start: number; ruleIn: number}> = ({
 						<Rule progress={second} />
 						<div style={{display: 'flex', flexDirection: 'column'}}>
 							{DECISIONS.slice(3).map((d, i) => (
-								<DecisionRow key={d.pick} d={d} i={i + 3} start={mid + 18} compact />
+								<DecisionRow key={d.pick} d={d} i={i + 3} start={mid + 14} compact />
 							))}
 						</div>
-						<Unsettled start={mid + 70} compact />
+						<Unsettled start={mid + 48} compact />
 					</>,
 				)}
 			</div>

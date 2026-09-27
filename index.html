@@ -36,6 +36,32 @@
 			   scroll runway, so the composition must never scroll the document.
 			   Reduced-motion is handled in JS instead, by snapping the frame
 			   easing off. */
+
+			/* One-time load entrance. This is the ONLY animation on the page that
+			   is not driven by useCurrentFrame(), and it is deliberately so: the
+			   composition is scroll-driven and its frame is frozen at 0 until the
+			   reader scrolls, so a frame-based load-in would never play. Every
+			   element it targets is already fully composed at frame 0 — this only
+			   covers the moment of arrival. All scroll motion stays frame-driven. */
+			@keyframes rise {
+				from {
+					opacity: 0;
+					transform: translateY(16px);
+				}
+				to {
+					opacity: 1;
+					transform: none;
+				}
+			}
+			[data-rise] {
+				animation: rise 820ms cubic-bezier(0.16, 1, 0.3, 1) both;
+				animation-delay: calc(var(--d, 0) * 1ms);
+			}
+			@media (prefers-reduced-motion: reduce) {
+				[data-rise] {
+					animation: none;
+				}
+			}
 		</style>
 	</head>
 	<body>

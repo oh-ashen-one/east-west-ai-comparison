@@ -46,7 +46,34 @@ The page is not a normal scrolling document. It is a fixed, viewport-locked
 
 Because the smoothing happens on the frame axis rather than in CSS, a fast
 flick of the wheel decelerates exactly the way the rest of the motion does.
-There is not a single CSS `transition` or `@keyframes` rule in the project.
+There is not a single CSS `transition` rule in the project, and the only
+`@keyframes` is the one-time load entrance described below.
+
+### The one trap in this architecture
+
+**`useCurrentFrame()` inside a non-playing `<Player>` is frozen at 0 and only
+advances when the reader scrolls.** It is not a clock.
+
+This means a load-in sequence written as frame ranges — `interpolate(frame, [14,
+54], [0, 1])` — never plays. The page rests on frame 0 forever, so if frame 0
+schedules nothing to be visible, the reader stares at an empty stage until they
+touch the wheel, and then scrolls away from the entrance they never saw.
+
+Two rules follow, and both are load-bearing:
+
+1. **Frame 0 must be the finished composition.** Every element is fully
+   composed and fully opaque at rest. Section entrances are gated on the frames
+   a reader passes *while looking at them*, never on frames they must scroll
+   past to reach them.
+2. **The one-time load entrance is CSS, on purpose.** `[data-rise]` in
+   `index.html` is a real CSS animation that runs once on mount. It is the only
+   thing on the page not driven by the frame, and it exists precisely because a
+   frame-driven load-in cannot run. All scroll-driven motion stays on the frame
+   axis, where it belongs.
+
+`scripts/arrival-audit.mjs` enforces rule 1. It walks every section, samples the
+frame where that section becomes the dominant thing on screen, and fails if its
+text is not legible there and 60 frames later.
 
 The runway is deliberately one viewport taller than the last frame — otherwise
 the maximum `scrollTop` falls short of the final frame and the footer is
@@ -175,10 +202,26 @@ things that are easy to break and hard to see:
 - each of the six axis panels sits flush at a distinct scroll position
 - **zero console errors and zero console warnings**
 
-`scripts/responsive.mjs` repeats the sweep at 390×844, 834×1112, 1280×800 and
-1920×1080 and writes screenshots to `.qa/responsive/`.
+`scripts/arrival-audit.mjs` is the one that catches the class of bug above. For
+each of the eleven section plateaus it measures how much of the visible text is
+actually legible when the reader arrives, and again 60 frames later:
 
-Both require the dev server to be running.
+```
+✓ hero           dominant@  40:  91% legible   +60: 100%
+✓ contenders     dominant@ 360: 100% legible   +60: 100%
+✓ axes/panel-1   dominant@ 700: 100% legible   +60: 100%
+  ...
+✓ footer         dominant@2330:  97% legible   +60:  97%
+```
+
+The legibility floor is 0.75 rather than 1.0 because body copy in this design
+sits at a deliberate 0.82 opacity — an audit tighter than the design's own text
+floor reports false failures.
+
+`scripts/responsive.mjs` repeats the visual sweep at 390×844, 834×1112, 1280×800
+and 1920×1080 and writes screenshots to `.qa/responsive/`.
+
+All three require the dev server to be running.
 
 ---
 
@@ -206,6 +249,7 @@ src/
     Footer.tsx          Section 06
 scripts/
   verify.mjs            Behavioural verification in real Chrome
+  arrival-audit.mjs     Fails sections that are still building when you arrive
   responsive.mjs        Multi-viewport sweep
   probe-gallery.mjs     Narrow DOM probe for the axis track
 ```

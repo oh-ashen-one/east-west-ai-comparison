@@ -69,7 +69,7 @@ export const ProsCons: React.FC = () => {
 	const start = T.proscons.in;
 	const narrow = isNarrow(useTier());
 
-	const headerIn = interpolate(frame, [start - 16, start + 24], [0, 1], {
+	const headerIn = interpolate(frame, [start - 20, start + 10], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 		easing: Easing.bezier(0.16, 1, 0.3, 1),
@@ -171,7 +171,7 @@ const PhonePages: React.FC<{start: number}> = ({start}) => {
 						<Rule progress={first} />
 						<div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '3vw', flex: 1, minHeight: 0, alignContent: 'start'}}>
 							{COLUMNS.map((col) => (
-								<FamilyList key={col.side} col={col} kind="wins" start={start + 20} />
+								<FamilyList key={col.side} col={col} kind="wins" start={start + 12} />
 							))}
 						</div>
 					</>,
@@ -198,7 +198,7 @@ const PhonePages: React.FC<{start: number}> = ({start}) => {
 						<Rule progress={second} />
 						<div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: '3vw', flex: 1, minHeight: 0, alignContent: 'start'}}>
 							{COLUMNS.map((col) => (
-								<FamilyList key={col.side} col={col} kind="losses" start={mid + 20} />
+								<FamilyList key={col.side} col={col} kind="losses" start={mid + 12} />
 							))}
 						</div>
 					</>,
@@ -350,7 +350,7 @@ const DesktopLayout: React.FC<{
 							title="Genuine failures"
 							color={C.faint}
 							items={col.losses}
-							start={start + 78}
+							start={start + 56}
 							glyph="−"
 						/>
 					</div>
@@ -370,7 +370,7 @@ const ColumnHead: React.FC<{
 	const c = sideColor(col.side);
 	const hi = sideHi(col.side);
 
-	const head = interpolate(frame, [start + 6, start + 40], [0, 1], {
+	const head = interpolate(frame, [start, start + 22], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 		easing: Easing.bezier(0.16, 1, 0.3, 1),
@@ -414,7 +414,7 @@ const ColumnHead: React.FC<{
 				title="Genuine strengths"
 				color={c}
 				items={col.wins}
-				start={start + 18}
+				start={start + 10}
 				glyph="+"
 				size={size}
 			/>
@@ -432,7 +432,7 @@ const List: React.FC<{
 }> = ({title, items, color, start, glyph, size = 12}) => {
 	const frame = useCurrentFrame();
 
-	const head = interpolate(frame, [start, start + 24], [0, 1], {
+	const head = interpolate(frame, [start - 4, start + 16], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 		easing: Easing.bezier(0.16, 1, 0.3, 1),
@@ -455,8 +455,8 @@ const List: React.FC<{
 			</div>
 
 			{items.map((item, i) => {
-				const at = start + 8 + i * 9;
-				const p = interpolate(frame, [at, at + 26], [0, 1], {
+				const at = start + 4 + i * 3;
+				const p = interpolate(frame, [at, at + 20], [0, 1], {
 					extrapolateLeft: 'clamp',
 					extrapolateRight: 'clamp',
 					easing: Easing.bezier(0.16, 1, 0.3, 1),

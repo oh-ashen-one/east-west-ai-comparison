@@ -38,7 +38,7 @@ export const Contenders: React.FC = () => {
 		},
 	);
 
-	const headerIn = interpolate(frame, [start - 10, start + 26], [0, 1], {
+	const headerIn = interpolate(frame, [start - 14, start + 16], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 		easing: Easing.bezier(0.16, 1, 0.3, 1),
@@ -46,7 +46,7 @@ export const Contenders: React.FC = () => {
 
 	const ruleIn = interpolate(
 		frame,
-		[start + 4, start + 62],
+		[start, start + 44],
 		[0, 1],
 		{
 			extrapolateLeft: 'clamp',
@@ -176,7 +176,7 @@ export const Contenders: React.FC = () => {
 								key={m.id}
 								model={m}
 								index={i}
-								start={start + 26}
+								start={start + 20}
 								narrow={narrow}
 							/>
 						))}
@@ -190,7 +190,7 @@ export const Contenders: React.FC = () => {
 					marginTop: '2.2vh',
 					opacity: interpolate(
 						frame,
-						[start + 150, start + 200],
+						[start + 44, start + 74],
 						[0, 1],
 						{
 							extrapolateLeft: 'clamp',
@@ -246,11 +246,11 @@ const Card: React.FC<{
 	narrow: boolean;
 }> = ({model, index, start, narrow}) => {
 	const frame = useCurrentFrame();
-	const at = start + index * 13;
+	const at = start + index * 6;
 	const col = sideColor(model.side);
 
 	// Zoom-in-on-scroll entrance: from small, springing to full.
-	const p = interpolate(frame, [at, at + 34], [0, 1], {
+	const p = interpolate(frame, [at, at + 24], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 		easing: Easing.bezier(0.16, 1, 0.3, 1),
