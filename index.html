@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>East vs West — An Objective Comparison of Frontier AI Models</title>
+		<meta
+			name="description"
+			content="An evidence-based, side-by-side comparison of leading Chinese and American frontier AI models across capability, cost, openness, speed, and censorship behaviour. Data current as of 27 September 2026."
+		/>
+		<meta name="color-scheme" content="dark" />
+		<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2308090b'/%3E%3Crect width='15' height='32' fill='%23e2483d'/%3E%3Crect x='17' width='15' height='32' fill='%235b8def'/%3E%3C/svg%3E" />
+		<style>
+			:root {
+				color-scheme: dark;
+			}
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+				background: #08090b;
+				overscroll-behavior-y: none;
+			}
+			/* The scroll runway. Its height is set from JS to compositionFrames * PX_PER_FRAME. */
+			#runway {
+				width: 100%;
+			}
+			/* The viewport-locked stage that hosts the <Player>. */
+			#stage {
+				position: fixed;
+				inset: 0;
+				overflow: hidden;
+				contain: strict;
+			}
+			/* The stage stays fixed: the page is a viewport-locked player over a
+			   scroll runway, so the composition must never scroll the document.
+			   Reduced-motion is handled in JS instead, by snapping the frame
+			   easing off. */
+		</style>
+	</head>
+	<body>
+		<div id="stage"></div>
+		<div id="runway"></div>
+		<script type="module" src="/src/main.tsx"></script>
+	</body>
+</html>
